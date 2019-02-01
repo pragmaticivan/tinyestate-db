@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tinyestate-db-deployment
+  labels:
+    app: tinyestate-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tinyestate-db
+  template:
+    metadata:
+      labels:
+        app: tinyestate-db
+    spec:
+      containers:
+      - name: tinyestate-db
+        image: postgres
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tinyestate-db-secret
+              key: db_password
+        - name: POSTGRES_USER
+          value: tinyestate
+        volumeMounts:
+        - name: "tinyestate-db-mount"
+          mountPath: "/var/lib/postgresql/data"
+      volumes:
+      - name: "tinyestate-db-mount"
+        persistentVolumeClaim:
+          claimName: tinyestate-db-persistent-volume-claim
+

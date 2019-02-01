@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tinyestate-db-persistent-volume
+  labels:
+    app: tinyestate-db
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/postgres-pv
+
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: tinyestate-db-persistent-volume-claim
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  volumeName: tinyestate-db-persistent-volume
